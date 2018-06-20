@@ -30,7 +30,7 @@ namespace API.TheChannel.BE.Controllers
 
         //[System.Web.Mvc.HttpPost]
         [Route("postit")]
-        public async Task<HttpResponseMessage> PostFormData(string language)
+        public async Task<HttpResponseMessage> PostFormData(string language, string location)
         {
 
             //BinaryReader binread = new BinaryReader(myfile);
@@ -49,13 +49,9 @@ namespace API.TheChannel.BE.Controllers
             {
                 CustomMultipartFormDataStreamProvider ppr = new CustomMultipartFormDataStreamProvider(root);
 
-                //var name = Request.Content.ReadAsMultipartAsync(ppr);
-                
                 // Read the form data.
                 await Request.Content.ReadAsMultipartAsync(provider);
                 List<string> files = new List<string>();
-
-                //string thisman = provider.FileData[0].LocalFileName;
 
                 // This illustrates how to get the file names.
                 foreach (MultipartFileData file in provider.FileData)
@@ -63,8 +59,8 @@ namespace API.TheChannel.BE.Controllers
                     Trace.WriteLine(file.Headers.ContentDisposition.FileName);
                     Trace.WriteLine("Server file path: " + file.LocalFileName + ".mp3");
                     files.Add(Path.GetFileName(file.LocalFileName));
-                    var medate = DateTime.Now.ToString().Replace("/","_").Replace(" ","_").Replace(":","_");
-                    File.Move(file.LocalFileName,root+"\\newRec_"+medate+".mp3");
+                    var medate = DateTime.Now.ToString().Replace("/", "_").Replace(" ", "_").Replace(":", "_");
+                    File.Move(file.LocalFileName, root + "\\VoiceMessage_" + location + "@" + medate + ".mp3");
                     //System.IO.File.Move(file.LocalFileName, "newMessage_english"+DateTime.Now.ToShortDateString()+"_.mp3");
                 }
 
@@ -80,60 +76,16 @@ namespace API.TheChannel.BE.Controllers
         public List<string> GetMessages(string language)
         {
             string root = HttpContext.Current.Server.MapPath("~/Content/Messages/" + language);
-            DirectoryInfo d = new DirectoryInfo(root);//Assuming Test is your Folder
-            FileInfo[] Files = d.GetFiles("*.MP3"); //Getting Text files
+            DirectoryInfo d = new DirectoryInfo(root);
+            FileInfo[] Files = d.GetFiles("*.MP3");
             List<string> MessageFiles = new List<string>();
-            string str = "";
+
             foreach (FileInfo file in Files)
             {
-              MessageFiles.Add(file.Name);
+                MessageFiles.Add(file.Name);
             }
 
             return MessageFiles;
-        }
-
-        [Route("uploadMessage")]
-        /// <summary>
-        /// ##  JB  ## 
-        /// Upload a new message to the server.
-        /// </summary>
-        /// <param name="audioSource">File source</param>
-        /// <param name="fileName">Name you wnat to give to the file</param>
-        /// <returns>Server response (OK or BadRequest)</returns>
-        [ResponseType(typeof(List<MessageUploadModel>))]
-        public async Task<IHttpActionResult> UploadMessage([FromBody] byte[] audioSource, string fileName /*string language*/)
-        {
-            var file = HttpContext.Current.Request.Files.Count > 0 ?
-        HttpContext.Current.Request.Files[0] : null;
-
-
-            var storageAccount = CloudStorageAccount.Parse(ConfigurationManager.ConnectionStrings["StorageConnectionString"].ConnectionString);
-
-
-            StorageCredentials creds = new StorageCredentials(accountName, accountKey);
-            CloudStorageAccount account = new CloudStorageAccount(creds, useHttps: true);
-
-            CloudBlobClient client = account.CreateCloudBlobClient();
-
-            CloudBlobContainer myContainer = client.GetContainerReference("messages");
-            myContainer.CreateIfNotExists();
-
-            CloudBlockBlob blob = myContainer.GetBlockBlobReference(fileName);
-            try
-            {
-                //blob.UploadFromStream(message);
-                byte[] data = audioSource;
-                using (var stream = new MemoryStream(data, writable: false))
-                {
-                    blob.UploadFromStream(stream);
-                }
-                return Ok();
-            }
-            catch (Exception e)
-            {
-                var r = e.Message;
-                return BadRequest();
-            }
         }
     }
 }
