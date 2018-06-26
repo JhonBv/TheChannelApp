@@ -346,6 +346,7 @@
     <Content Include="Library\SendGrid.dll" />
     <Content Include="Library\SendGrid.SmtpApi.dll" />
     <Content Include="Library\SendGridMail.dll" />
+    <Content Include="Library\Thinktecture.IdentityModel.Core.dll" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Areas\HelpPage\Views\Web.config" />
