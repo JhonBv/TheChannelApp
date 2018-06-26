@@ -12,11 +12,11 @@ namespace API.TheChannel.BE.Providers
 {
     public class BlobStorageUploadProvider : MultipartFileStreamProvider
     {
-        public List<MessageUploadModel> Uploads { get; set; }
+        public List<MessageModel> Uploads { get; set; }
 
         public BlobStorageUploadProvider() : base(Path.GetTempPath())
         {
-            Uploads = new List<MessageUploadModel>();
+            Uploads = new List<MessageModel>();
         }
 
         public override Task ExecutePostProcessingAsync()
@@ -47,7 +47,7 @@ namespace API.TheChannel.BE.Providers
                 File.Delete(fileData.LocalFileName);
 
                 // Create blob upload model with properties from blob info
-                var blobUpload = new MessageUploadModel
+                var blobUpload = new MessageModel
                 {
                     FileName = blob.Name,
                     FileUrl = blob.Uri.AbsoluteUri,

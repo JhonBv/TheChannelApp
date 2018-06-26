@@ -1,8 +1,14 @@
-﻿using API.TheChannel.BE.Interfaces;
+﻿using API.TheChannel.BE.Factories;
+using API.TheChannel.BE.Interfaces;
+using API.TheChannel.BE.Models;
+using API.TheChannel.BE.Repositories;
 using API.TheChannel.BE.Services;
+using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -18,14 +24,15 @@ namespace API.TheChannel.BE.Controllers
 
         // Interface in place so you can resolve with IoC container of your choice
         private readonly IMessageService _service = new VoiceMessageService();
+        private IVoiceMessageRepository _voiceMessage = new VoiceMessageRepository();
+        private IMessageFactory _createMessage = new MessageFactory();
 
         //[System.Web.Mvc.HttpPost]
         [Route("postit")]
         public async Task<HttpResponseMessage> PostFormData(string language, string location)
         {
 
-            //BinaryReader binread = new BinaryReader(myfile);
-
+            MessageViewModel m = new MessageViewModel();
             // Check if the request contains multipart/form-data.
             if (!Request.Content.IsMimeMultipartContent())
             {
@@ -45,18 +52,27 @@ namespace API.TheChannel.BE.Controllers
                 // This illustrates how to get the file names.
                 foreach (MultipartFileData file in provider.FileData)
                 {
+                    var originalFileName = file.Headers.ContentDisposition.FileName.Trim(new char[] { '\"' });
+                    
                     Trace.WriteLine(file.Headers.ContentDisposition.FileName);
                     Trace.WriteLine("Server file path: " + file.LocalFileName + ".mp3");
-                    // "\"hindu23 Sep 2016 16_32_58.mp3\""
+                    
                     files.Add(Path.GetFileName(file.LocalFileName));
                     
                                         
-                    var originalFileName = file.Headers.ContentDisposition.FileName.Trim(new char[] { '\"' });
+                    
                     
                     //var medate = DateTime.Now.ToString().Replace("/", "_").Replace(" ", "_").Replace(":", "_");
-                    File.Move(file.LocalFileName, root +"/"+ originalFileName); //"\\VoiceMessage_" + location + "@" + medate + ".mp3");
+                    File.Move(file.LocalFileName, root +"/"+ originalFileName);
+                    m.FileName = originalFileName;
+                    m.FileUrl = ConfigurationManager.AppSettings["MessageUrlRoot"] + originalFileName;
+                    m.DateAdded = DateTime.Now.ToLongDateString();
+                    m.Location = location;
+                    m.FileSizeInBytes = file.Headers.ContentDisposition.Size.GetValueOrDefault();
 
                 }
+                _voiceMessage.SaveMessage(_createMessage.CreateMessageRecord(m));
+
 
                 return Request.CreateResponse(HttpStatusCode.OK);
             }
@@ -64,6 +80,7 @@ namespace API.TheChannel.BE.Controllers
             {
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
             }
+            
         }
 
         [Route("getem")]
@@ -71,7 +88,7 @@ namespace API.TheChannel.BE.Controllers
         {
             string root = HttpContext.Current.Server.MapPath("~/Content/Messages/" + language);
             DirectoryInfo d = new DirectoryInfo(root);
-            FileInfo[] Files = d.GetFiles("*.MP3");
+            FileInfo[] Files = d.GetFiles();
             Dictionary<string, string> MessageFiles = new Dictionary<string, string>();
 
             foreach (FileInfo file in Files)
@@ -80,6 +97,12 @@ namespace API.TheChannel.BE.Controllers
             }
 
             return MessageFiles;
+        }
+
+        [Route("Messages")]
+        public IEnumerable<MessageViewModel> GetApprovedMessages()
+        {
+            return _voiceMessage.ViewMessages().ToList();
         }
     }
 }

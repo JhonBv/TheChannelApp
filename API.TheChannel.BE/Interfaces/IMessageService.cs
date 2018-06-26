@@ -15,7 +15,7 @@ namespace API.TheChannel.BE.Interfaces
         /// </summary>
         /// <param name="httpContent">Binary</param>
         /// <returns></returns>
-        Task<List<MessageUploadModel>> UploadMessageAsync(HttpContent httpContent);
+        Task<List<MessageModel>> UploadMessageAsync(HttpContent httpContent);
         /// <summary>
         /// Downloads a message from the server
         /// </summary>

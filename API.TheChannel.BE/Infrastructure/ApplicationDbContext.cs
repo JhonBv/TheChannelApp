@@ -12,6 +12,8 @@ namespace API.TheChannel.BE.Infrastructure
 
         }
         public DbSet<Audience> Audience { get; set; }
+        public DbSet<MessageModel> Message { get; set; }
+
         public static ApplicationDbContext Create()
         {
             return new ApplicationDbContext();

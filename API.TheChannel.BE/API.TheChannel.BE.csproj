@@ -295,6 +295,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MessageUploadController.cs" />
     <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Factories\MessageFactory.cs" />
     <Compile Include="Factories\ModelFactory.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -306,15 +307,17 @@
     <Compile Include="Infrastructure\ApplicationUserManager.cs" />
     <Compile Include="Infrastructure\AudienceStore.cs" />
     <Compile Include="Interfaces\IAudiencesRepository.cs" />
+    <Compile Include="Interfaces\IMessageFactory.cs" />
     <Compile Include="Interfaces\IMessageService.cs" />
-    <Compile Include="Interfaces\IVoiceMessageService.cs" />
+    <Compile Include="Interfaces\IVoiceMessageRepository.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Audience.cs" />
     <Compile Include="Models\AudienceBindingModel.cs" />
     <Compile Include="Models\AudienceViewModel.cs" />
     <Compile Include="Models\CreateUserBindingModel.cs" />
     <Compile Include="Models\MessageDownloadModel.cs" />
-    <Compile Include="Models\MessageUploadModel.cs" />
+    <Compile Include="Models\MessageModel.cs" />
+    <Compile Include="Models\MessageViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\BlobStorageUploadProvider.cs" />
     <Compile Include="Providers\CustomJwtFormat.cs" />
@@ -324,6 +327,7 @@
     <Compile Include="Providers\MultipartParser.cs" />
     <Compile Include="Repositories\AudienceRepository.cs" />
     <Compile Include="Repositories\BaseRepository.cs" />
+    <Compile Include="Repositories\VoiceMessageRepository.cs" />
     <Compile Include="Services\EmailService.cs" />
     <Compile Include="Services\VoiceMessageService.cs" />
     <Compile Include="Startup.cs" />
@@ -335,11 +339,11 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\Images\header.PNG" />
+    <Content Include="Content\Messages\english\I cant find the phone.mp3" />
     <Content Include="Content\Messages\english\newRec.mp3" />
     <Content Include="Content\Messages\english\newRec_18_06_2018_14_36_45.mp3" />
     <Content Include="Content\Messages\english\newRec_18_06_2018_14_37_58.mp3" />
     <Content Include="Content\Messages\english\newRec_18_06_2018_14_38_35.mp3" />
-    <Content Include="Content\Messages\english\newRec_19_06_2018_10_39_04.mp3" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />

@@ -67,7 +67,7 @@ namespace API.TheChannel.BE.Services
         /// </summary>
         /// <param name="httpContent">File name and location</param>
         /// <returns>Server response</returns>
-        public async Task<List<MessageUploadModel>> UploadMessageAsync(HttpContent httpContent)
+        public async Task<List<MessageModel>> UploadMessageAsync(HttpContent httpContent)
         {
             var blobUploadProvider = new BlobStorageUploadProvider();
 
