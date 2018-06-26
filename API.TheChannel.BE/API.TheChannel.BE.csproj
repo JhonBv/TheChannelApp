@@ -340,6 +340,8 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="Library\IdentityServer3.dll" />
+    <Content Include="Library\log4net.dll" />
     <Content Include="Library\Microsoft.Owin.Security.Jwt.dll" />
     <Content Include="Library\SendGrid.dll" />
     <Content Include="Library\SendGrid.SmtpApi.dll" />
