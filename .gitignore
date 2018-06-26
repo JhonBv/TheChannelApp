@@ -10,6 +10,7 @@
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 Web
+vals.txt
 
 # Build results
 [Dd]ebug/

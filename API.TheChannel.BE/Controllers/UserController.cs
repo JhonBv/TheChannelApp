@@ -45,7 +45,7 @@ namespace API.TheChannel.BE.Controllers
 
             await this.AppUserManager.SendEmailAsync(user.Id,
                                                     "Please Confirm your Email",
-                                                   "<img src=\"" + System.Configuration.ConfigurationManager.AppSettings["BaseUrlAddress"] + "Content/images/header.png" + "\"><br/> Welcome to The Channel, in order to continue with your registration Please confirm your email address by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                                                   "<img src=\"" + System.Configuration.ConfigurationManager.AppSettings["BaseUrlAddress"] + "Content/Images/header.png" + "\"><br/> Welcome to The Channel, in order to continue with your registration Please confirm your email address by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
             //JB. Once confirmed, tell our app and update AspNet users table accordingly ;)
             Uri locationHeader = new Uri(Url.Link("GetUserById", new { id = user.Id }));
