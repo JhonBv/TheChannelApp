@@ -1,8 +1,14 @@
 ﻿using System;
+using System.Configuration;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+
+using System.Web.Http;
+
 using System.Security.Claims;
 using System.Threading.Tasks;
-using System.Web.Http;
+
 using API.TheChannel.BE.Infrastructure;
 using API.TheChannel.BE.Models;
 using Microsoft.AspNet.Identity;
@@ -68,28 +74,31 @@ namespace API.TheChannel.BE.Controllers
         /// <param name="code"></param>
         /// <returns></returns>
         [Route("ConfirmEmail", Name = "ConfirmEmailRoute")]
-        public async Task<IHttpActionResult> ConfirmEmail(string userId = "", string code = "")
+        public async Task<HttpResponseMessage> ConfirmEmail(string userId = "", string code = "")
         {
+            var response = Request.CreateResponse(HttpStatusCode.Moved);
+            var badUriResponse = ConfigurationManager.AppSettings["BaseUrlAddress"]+ "Home/BadRequest";
+            var goodUriResponse = ConfigurationManager.AppSettings["BaseUrlAddress"] + "Home/SuccessRegistration";
+
             if (string.IsNullOrWhiteSpace(userId) || string.IsNullOrWhiteSpace(code))
             {
                 ModelState.AddModelError("", "User Id and Code are required");
-                return BadRequest(ModelState);
+                response.Headers.Location = new Uri(badUriResponse);
+                return response;
             }
 
             IdentityResult result = await this.AppUserManager.ConfirmEmailAsync(userId, code);
 
             if (result.Succeeded)
             {
-                //JB. Add to Users and Claims               
+                response.Headers.Location = new Uri(goodUriResponse);
 
-                //JB. return response;
-                string mess = "email account have been successfully activated";
-
-                return Ok(mess);
+                return response;
             }
             else
             {
-                return GetErrorResult(result);
+                response.Headers.Location = new Uri(badUriResponse);
+                return response;
             }
         }
 

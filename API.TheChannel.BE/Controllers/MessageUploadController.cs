@@ -27,7 +27,8 @@ namespace API.TheChannel.BE.Controllers
         private IVoiceMessageRepository _voiceMessage = new VoiceMessageRepository();
         private IMessageFactory _createMessage = new MessageFactory();
 
-        //[System.Web.Mvc.HttpPost]
+
+        [Authorize]
         [Route("postit")]
         public async Task<HttpResponseMessage> PostFormData(string language, string location)
         {
@@ -80,6 +81,7 @@ namespace API.TheChannel.BE.Controllers
             
         }
 
+        [Authorize]
         [Route("getem")]
         public Dictionary<string,string> GetMessages(string language)
         {
@@ -96,10 +98,25 @@ namespace API.TheChannel.BE.Controllers
             return MessageFiles;
         }
 
+        [Authorize]
+        [Route("Messages/New")]
+        public IEnumerable<MessageViewModel> GetNewMessages()
+        {
+            return _voiceMessage.ViewNewMessages().ToList();
+        }
+
+        [AllowAnonymous]
         [Route("Messages")]
         public IEnumerable<MessageViewModel> GetApprovedMessages()
         {
-            return _voiceMessage.ViewMessages().ToList();
+            return _voiceMessage.ViewApprovedMessages().ToList();
+        }
+
+        [Authorize]
+        [Route("Messages/All")]
+        public IEnumerable<MessageViewModel> GetAllMessages()
+        {
+            return _voiceMessage.ViewAllMessages().ToList();
         }
     }
 }

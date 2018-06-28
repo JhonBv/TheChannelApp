@@ -10,7 +10,11 @@ namespace API.TheChannel.BE.Interfaces
     public interface IVoiceMessageRepository
     {
         void SaveMessage(MessageModel model);
-        IEnumerable<MessageViewModel> ViewMessages();
+        IEnumerable<MessageViewModel> ViewApprovedMessages();
+
+        IEnumerable<MessageViewModel> ViewNewMessages();
+
+        IEnumerable<MessageViewModel> ViewAllMessages();
         void ApproveMessage(int id);
         void RemoveMessage(int id);
     }

@@ -14,5 +14,18 @@ namespace API.TheChannel.BE.Controllers
 
             return View();
         }
+
+        public ActionResult SuccessRegistration()
+        {
+            ViewBag.Title = "Registrtion successful";
+
+            return View();
+        }
+        public ActionResult BadRequest()
+        {
+            ViewBag.Title = "Registrtion successful";
+
+            return View();
+        }
     }
 }

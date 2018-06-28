@@ -28,12 +28,36 @@ namespace API.TheChannel.BE.Repositories
             Ctx.SaveChanges();
         }
 
-        public IEnumerable<MessageViewModel> ViewMessages()
+        public IEnumerable<MessageViewModel> ViewApprovedMessages()
         {
             List<MessageViewModel> list = new List<MessageViewModel>();
             foreach (var i in Ctx.Message.Where(m => m.isApproved))
             {
                 list.Add(new MessageViewModel {FileName = i.FileName, FileUrl = i.FileUrl, Location = i.Location, DateAdded = i.DateAdded, FileSizeInBytes = i.FileSizeInBytes });
+            }
+            return list;
+        }
+
+        /// <summary>
+        /// Returns a lsit of New Messages (unapproved)
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<MessageViewModel> ViewNewMessages()
+        {
+            List<MessageViewModel> list = new List<MessageViewModel>();
+            foreach (var i in Ctx.Message.Where(m => m.isApproved))
+            {
+                list.Add(new MessageViewModel { FileName = i.FileName, FileUrl = i.FileUrl, Location = i.Location, DateAdded = i.DateAdded, FileSizeInBytes = i.FileSizeInBytes });
+            }
+            return list;
+        }
+
+        public IEnumerable<MessageViewModel> ViewAllMessages()
+        {
+            List<MessageViewModel> list = new List<MessageViewModel>();
+            foreach (var i in Ctx.Message)
+            {
+                list.Add(new MessageViewModel { FileName = i.FileName, FileUrl = i.FileUrl, Location = i.Location, DateAdded = i.DateAdded, FileSizeInBytes = i.FileSizeInBytes });
             }
             return list;
         }
