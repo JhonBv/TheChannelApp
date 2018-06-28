@@ -59,9 +59,6 @@ namespace API.TheChannel.BE.Controllers
                     
                     files.Add(Path.GetFileName(file.LocalFileName));
                     
-                                        
-                    
-                    
                     //var medate = DateTime.Now.ToString().Replace("/", "_").Replace(" ", "_").Replace(":", "_");
                     File.Move(file.LocalFileName, root +"/"+ originalFileName);
                     m.FileName = originalFileName;

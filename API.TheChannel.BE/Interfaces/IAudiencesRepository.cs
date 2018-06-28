@@ -16,6 +16,10 @@ namespace API.TheChannel.BE.Interfaces
         Audience ReturnAudienceById(string id);
         //JB. Pass vehcile Id to update status to Available
         Task<string> RemoveAudience(string audienceId);
+
+        Audience ReturnAudienceByName(string name);
+        Audience ReturnAudienceByUrl(string url);
+
         Task<string> UpdateAudience(AudienceViewModel audienceDtls);
 
         Audience GetAudienceByClientIdAndClientSecret(string clientId, string clientSecret);
