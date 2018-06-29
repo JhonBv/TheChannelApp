@@ -17,6 +17,9 @@ namespace API.TheChannel.BE.Models
 
         public string DateAdded { get; set; }
 
+        //public bool IsNew { get; set; }
+
+
         public bool isApproved { get; set; }
         //JB. As per isobel, this is where the message was sent from
         public string Location { get; set; }

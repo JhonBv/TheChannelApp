@@ -15,17 +15,19 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Auth;
+using Microsoft.WindowsAzure.Storage.Blob;
+
 namespace API.TheChannel.BE.Controllers
 {
     public class MessageUploadController : ApiController
     {
-        string accountName = "thechannelstorageacc";
-        string accountKey = "x7w+KQ7wsETywh4WvCooSrvZ6kc+MHuiWleyrSDRW7X7NjgTIh3SiSRmTWaHwerxhWfh3xnwtgdRLi/3bQY4Bw==";
-
+   
         // Interface in place so you can resolve with IoC container of your choice
         private readonly IMessageService _service = new VoiceMessageService();
-        private IVoiceMessageRepository _voiceMessage = new VoiceMessageRepository();
-        private IMessageFactory _createMessage = new MessageFactory();
+        private readonly IVoiceMessageRepository _voiceMessage = new VoiceMessageRepository();
+        private readonly IMessageFactory _createMessage = new MessageFactory();
 
 
         [Authorize]
@@ -68,9 +70,9 @@ namespace API.TheChannel.BE.Controllers
                     m.Location = location;
                     m.FileSizeInBytes = file.Headers.ContentDisposition.Size.GetValueOrDefault();
 
+                   //_voiceMessage.AddToAzure(root+"/"+originalFileName);
                 }
                 _voiceMessage.SaveMessage(_createMessage.CreateMessageRecord(m));
-
 
                 return Request.CreateResponse(HttpStatusCode.OK);
             }
@@ -81,30 +83,34 @@ namespace API.TheChannel.BE.Controllers
             
         }
 
+        /// <summary>
+        /// Gets All files in the physical directory.
+        /// </summary>
+        /// <param name="language"></param>
+        /// <returns></returns>
         [Authorize]
         [Route("getem")]
         public Dictionary<string,string> GetMessages(string language)
         {
-            string root = HttpContext.Current.Server.MapPath("~/Content/Messages/" + language);
-            DirectoryInfo d = new DirectoryInfo(root);
-            FileInfo[] Files = d.GetFiles();
-            Dictionary<string, string> MessageFiles = new Dictionary<string, string>();
 
-            foreach (FileInfo file in Files)
-            {
-                MessageFiles.Add(file.Name, file.CreationTime.ToString());
-            }
-
-            return MessageFiles;
+            return _voiceMessage.GetAllPhysicalFiles(language);
         }
 
+        /// <summary>
+        /// Gets a list of all new messages (not yet approved)
+        /// </summary>
+        /// <returns>IEnumerable&lt;MessageModel&gt;</returns>
         [Authorize]
         [Route("Messages/New")]
-        public IEnumerable<MessageViewModel> GetNewMessages()
+        public IEnumerable<MessageModel> GetNewMessages()
         {
             return _voiceMessage.ViewNewMessages().ToList();
         }
 
+        /// <summary>
+        /// Returns a list of mssages (approved) so that users can listen to.
+        /// </summary>
+        /// <returns>IEnumerable&lt;MessageViewModel&gt;</returns>
         [AllowAnonymous]
         [Route("Messages")]
         public IEnumerable<MessageViewModel> GetApprovedMessages()
@@ -112,11 +118,41 @@ namespace API.TheChannel.BE.Controllers
             return _voiceMessage.ViewApprovedMessages().ToList();
         }
 
+        /// <summary>
+        /// Gets all messages from the Database.
+        /// </summary>
+        /// <returns></returns>
         [Authorize]
         [Route("Messages/All")]
         public IEnumerable<MessageViewModel> GetAllMessages()
         {
             return _voiceMessage.ViewAllMessages().ToList();
         }
+
+        /// <summary>
+        /// Allows an administratior to approve a message
+        /// </summary>
+        /// <param name="id">integer Id</param>
+        /// <returns></returns>
+        [Authorize]
+        [Route("Message/Approve")]
+        public IHttpActionResult ApproveMessage(int id)
+        {
+             _voiceMessage.ApproveMessage(id);
+            return Ok("Message Approved");
+        }
+
+        /// <summary>
+        /// Allows an administrator to remove a message
+        /// </summary>
+        /// <param name="id">integer Id</param>
+        /// <returns></returns>
+        [Authorize]
+        [Route("Message/Remove")]
+        public IHttpActionResult RemoveMessage(int id)
+        {
+            _voiceMessage.RemoveMessage(id);
+            return Ok("Message Removed");
+        }        
     }
 }
