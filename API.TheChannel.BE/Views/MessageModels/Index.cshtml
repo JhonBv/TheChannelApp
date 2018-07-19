@@ -1,0 +1,45 @@
+﻿@model IEnumerable<API.TheChannel.BE.Models.MessageModel>
+@{
+
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link href="@Url.Content("~/Content/bootstrap.min.css")" rel="stylesheet" />
+    <script src="@Url.Content("~/Scripts/jquery-3.3.1.min.js")"></script>
+    <title>Index</title>
+</head>
+
+<body>
+
+    @foreach (var item in Model)
+    {
+        if (!item.isApproved)
+        {
+            <div class="alert alert-warning">
+                <ul style="list-style-type: none;">
+                    <li>Title: @item.FileName</li>
+                    <li>Sent from: @item.Location, Sent date: @item.DateAdded</li>
+                    <li><audio controls style="width: 80%"><source src="@item.FileUrl" type="audio/mpeg"></audio></li>
+                    <li>@Html.ActionLink("Edit", "Edit", new { id = item.Id })</li>
+                    <li>@Html.ActionLink("Delete", "Delete", new { id = item.Id })</li>
+                </ul>
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-dark">
+                <ul style="list-style-type: none;">
+                    <li>Title: @item.FileName</li>
+                    <li>Sent from: @item.Location, Sent date: @item.DateAdded</li>
+                    <li><audio controls style="width: 80%"><source src="@item.FileUrl" type="audio/mpeg"></audio></li>
+                    <li>@Html.ActionLink("Edit", "Edit", new { id = item.Id })</li>
+                    <li>@Html.ActionLink("Delete", "Delete", new { id = item.Id })</li>
+                </ul>
+            </div>
+        }
+    }
+</body>
+</html>

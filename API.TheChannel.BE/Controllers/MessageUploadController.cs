@@ -14,10 +14,8 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
+using Microsoft.AspNet.Identity;
 
-using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Auth;
-using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace API.TheChannel.BE.Controllers
 {
@@ -28,9 +26,9 @@ namespace API.TheChannel.BE.Controllers
         private readonly IMessageService _service = new VoiceMessageService();
         private readonly IVoiceMessageRepository _voiceMessage = new VoiceMessageRepository();
         private readonly IMessageFactory _createMessage = new MessageFactory();
+        private ValidUserService _checkUser = new ValidUserService();
 
-
-        [Authorize]
+        [AllowAnonymous]
         [Route("postit")]
         public async Task<HttpResponseMessage> PostFormData(string language, string location)
         {
@@ -92,7 +90,11 @@ namespace API.TheChannel.BE.Controllers
         [Route("getem")]
         public Dictionary<string,string> GetMessages(string language)
         {
-
+            var userId = User.Identity.GetUserId();
+            if (_checkUser.userIsActive(userId) == false)
+            {
+                throw new HttpResponseException(HttpStatusCode.Forbidden);
+            }
             return _voiceMessage.GetAllPhysicalFiles(language);
         }
 
@@ -112,19 +114,19 @@ namespace API.TheChannel.BE.Controllers
         /// </summary>
         /// <returns>IEnumerable&lt;MessageViewModel&gt;</returns>
         [AllowAnonymous]
-        [Route("Messages")]
+        [Route("Messages/approved")]
         public IEnumerable<MessageViewModel> GetApprovedMessages()
         {
             return _voiceMessage.ViewApprovedMessages().ToList();
-        }
+        }        
 
         /// <summary>
         /// Gets all messages from the Database.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>LIst of messages</returns>
         [Authorize]
         [Route("Messages/All")]
-        public IEnumerable<MessageViewModel> GetAllMessages()
+        public IEnumerable<MessageModel> GetAllMessages()
         {
             return _voiceMessage.ViewAllMessages().ToList();
         }
@@ -134,7 +136,7 @@ namespace API.TheChannel.BE.Controllers
         /// </summary>
         /// <param name="id">integer Id</param>
         /// <returns></returns>
-        [Authorize]
+        //[Authorize]
         [Route("Message/Approve")]
         public IHttpActionResult ApproveMessage(int id)
         {
@@ -153,6 +155,23 @@ namespace API.TheChannel.BE.Controllers
         {
             _voiceMessage.RemoveMessage(id);
             return Ok("Message Removed");
-        }        
+        }
+
+        /// <summary>
+        /// Allows an administrator to remove a message
+        /// </summary>
+        /// <param name="mod">Model</param>
+        /// <returns></returns>
+        [Authorize]
+        [Route("Message/update")]
+        public IHttpActionResult UpdateMessage(MessageModel mod)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+            _voiceMessage.UpdateMessage(mod);
+            return Ok("Message Updated");
+        }
     }
 }

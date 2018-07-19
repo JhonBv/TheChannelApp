@@ -1,0 +1,63 @@
+﻿@using System.Diagnostics.Eventing.Reader
+@model IEnumerable<API.TheChannel.BE.Models.MessageViewModel>
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />   
+    <link href="@Url.Content("~/Content/bootstrap.min.css")" rel="stylesheet" />
+    <script src="@Url.Content("~/Scripts/jquery-3.3.1.min.js")"></script>
+    <title>Index</title>
+</head>
+<body>
+    <div style="width: 100%">
+        @if (Model == null)
+        {
+            <p>No messages to display!</p>
+        }
+        else
+        {
+            <div style="width: 99%; float: left">
+                @foreach (var item in Model)
+                {
+                    if (item.Location == "UK")
+                    {
+                        <div style="width: 49%; float: left">
+                            <div class="alert alert-info">
+                                <ul style="list-style-type: none;">
+                                    <li>Title: @item.FileName</li>
+                                    <li>Sent from: @item.Location, Sent date: @item.DateAdded</li>
+                                    <li><audio controls style="width: 80%"><source src="@item.FileUrl" type="audio/mpeg"></audio></li>
+                                </ul>
+                            </div>
+                        </div>
+                    }
+
+                }
+            </div>
+            <div style="width: 50%; float: right; padding-top: 2%">
+                @foreach (var item in Model)
+                {
+                    if (item.Location == "Detention")
+                    {
+
+                        <div style="width: 99%; float: right; margin-left: 1%;">
+                            <div class="alert alert-danger">
+                                <ul style="list-style-type: none;">
+                                    <li>Title: @item.FileName</li>
+                                    <li>Sent from: @item.Location, Sent date: @item.DateAdded</li>
+                                    <li><audio controls style="width: 80%"><source src="@item.FileUrl" type="audio/mpeg"></audio></li>
+                                </ul>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        }
+    </div>
+</body>
+</html>

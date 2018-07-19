@@ -9,6 +9,12 @@ namespace API.TheChannel.BE.Infrastructure
 {
     public class ApplicationUser : IdentityUser
     {
+
+        /// <summary>
+        /// JB. User must be active before interacting with The Channel systems
+        /// </summary>
+        public bool UserActive { get; set; }
+
         /// <summary>
         /// Method which actually creates a user, assigns a Hash to th user password and generates a unique UserLoginId.
         /// </summary>

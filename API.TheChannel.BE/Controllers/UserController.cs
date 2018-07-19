@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Net;
@@ -7,17 +8,22 @@ using System.Net.Http;
 using System.Web.Http;
 
 using System.Security.Claims;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 using API.TheChannel.BE.Infrastructure;
 using API.TheChannel.BE.Models;
+using API.TheChannel.BE.Services;
 using Microsoft.AspNet.Identity;
+using Newtonsoft.Json;
 
 namespace API.TheChannel.BE.Controllers
 {
     [RoutePrefix("api/accounts")]
     public class UserController : BaseApiController
     {
+        private ValidUserService _checkUser = new ValidUserService();
+
         [AllowAnonymous]
         [Route("Register")]
         // POST api/Account/Register
@@ -58,10 +64,12 @@ namespace API.TheChannel.BE.Controllers
 
             AppUserManager.AddClaim(user.Id, new Claim(ClaimTypes.Uri, user.Email));
             //AppUserManager.AddToRole(user.Id, "User");
+            var dis = new Dictionary<string,Uri>();
+            dis.Add("userUrl", locationHeader);
 
-
+            var daReturnedUSer = JsonConvert.SerializeObject(dis);
             //JB. Return generated UserId to client
-            return Ok(locationHeader);
+            return Ok(daReturnedUSer);
         }
 
 
@@ -135,6 +143,24 @@ namespace API.TheChannel.BE.Controllers
             }
 
             return NotFound();
+
+        }
+        [HttpGet]
+        [Route("checkEmail")]
+        public  bool EmailExist(string email)
+        {
+            //bool fHasSpace = email.Contains(" ");
+            var damail = Regex.Replace(email, @"\s+", "+");
+            return _checkUser.checkEmail(damail);
+
+        }
+
+        [HttpGet]
+        [Route("checkUsername")]
+        public bool UsernameExist(string username)
+        {
+            
+            return _checkUser.checkUsername(username);
 
         }
     }

@@ -14,9 +14,11 @@ namespace API.TheChannel.BE.Interfaces
 
         IEnumerable<MessageModel> ViewNewMessages();
 
-        IEnumerable<MessageViewModel> ViewAllMessages();
+        IEnumerable<MessageModel> ViewAllMessages();
         void ApproveMessage(int id);
         void RemoveMessage(int id);
+
+        void UpdateMessage(MessageModel model);
 
         Dictionary<string, string> GetAllPhysicalFiles(string language);
     }

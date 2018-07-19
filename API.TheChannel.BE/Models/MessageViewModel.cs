@@ -15,5 +15,7 @@ namespace API.TheChannel.BE.Models
         //JB. As per isobel, this is where the message was sent from
         public string Location { get; set; }
         public long FileSizeInBytes { get; set; }
+
+        public bool isApproved { get; set; }
     }
 }

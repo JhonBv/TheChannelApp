@@ -6,6 +6,7 @@ using API.TheChannel.BE.Repositories;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.DataHandler.Encoder;
 using System.IdentityModel.Tokens;
+using API.TheChannel.BE.Services;
 using Thinktecture.IdentityModel.Tokens;
 
 namespace API.TheChannel.BE.Providers

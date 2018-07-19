@@ -39,7 +39,7 @@ namespace API.TheChannel.BE
                 //Provider = new ApplicationOAuthProvider(PublicClientId),
                 Provider = new CustomOAuthProvider(),
                 AuthorizeEndpointPath = new PathString("/api/Account/ExternalLogin"),
-                AccessTokenExpireTimeSpan = TimeSpan.FromMinutes(10),
+                AccessTokenExpireTimeSpan = TimeSpan.FromDays(365),
 
                 AccessTokenFormat = new CustomJwtFormat(System.Configuration.ConfigurationManager.AppSettings["BaseUrlAddress"]),
 

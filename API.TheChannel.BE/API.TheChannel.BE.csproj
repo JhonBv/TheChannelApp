@@ -35,6 +35,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>App_Data\XmlDocumentation.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -50,10 +51,10 @@
       <HintPath>..\packages\Unity.5.8.6\lib\net46\CommonServiceLocator.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="IdentityServer3">
       <HintPath>..\..\JJB.SSO\BSI.SSO.Shop.V1.API\bin\IdentityServer3.dll</HintPath>
@@ -106,6 +107,9 @@
     </Reference>
     <Reference Include="Microsoft.WindowsAzure.Storage, Version=9.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\WindowsAzure.Storage.9.2.0\lib\net45\Microsoft.WindowsAzure.Storage.dll</HintPath>
+    </Reference>
+    <Reference Include="Mvc.Grid.Core, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NonFactors.Grid.Core.Mvc5.5.0.0\lib\net45\Mvc.Grid.Core.dll</HintPath>
     </Reference>
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
@@ -291,9 +295,11 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Controllers\AndroidMessagesController.cs" />
     <Compile Include="Controllers\AudienceController.cs" />
     <Compile Include="Controllers\BsaeApiController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\MessageModelsController.cs" />
     <Compile Include="Controllers\MessageUploadController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Factories\MessageFactory.cs" />
@@ -330,6 +336,7 @@
     <Compile Include="Repositories\BaseRepository.cs" />
     <Compile Include="Repositories\VoiceMessageRepository.cs" />
     <Compile Include="Services\EmailService.cs" />
+    <Compile Include="Services\ValidUserService.cs" />
     <Compile Include="Services\VoiceMessageService.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -340,11 +347,13 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\Images\header.PNG" />
-    <Content Include="Content\Messages\english\I cant find the phone.mp3" />
-    <Content Include="Content\Messages\english\newRec.mp3" />
-    <Content Include="Content\Messages\english\newRec_18_06_2018_14_36_45.mp3" />
-    <Content Include="Content\Messages\english\newRec_18_06_2018_14_37_58.mp3" />
-    <Content Include="Content\Messages\english\newRec_18_06_2018_14_38_35.mp3" />
+    <Content Include="Content\Images\play.png" />
+    <Content Include="Content\Messages\english\Audience.mp3" />
+    <Content Include="Content\Messages\english\Children_1.mp3" />
+    <Content Include="Content\Messages\english\mayana.MP3.mp3" />
+    <Content Include="Content\Messages\english\Message_.mp3" />
+    <Content Include="Content\Messages\english\Scream.mp3" />
+    <Content Include="Content\MvcGrid\mvc-grid.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -379,6 +388,7 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\MvcGrid\Fonts\GridGlyphs.woff" />
     <None Include="Properties\PublishProfiles\thechannel - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
@@ -386,13 +396,8 @@
     <Content Include="Scripts\jquery-3.3.1.slim.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
-    <Content Include="Web.config" />
-    <Content Include="Web.Debug.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </Content>
-    <Content Include="Web.Release.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </Content>
+    <Content Include="Scripts\MvcGrid\mvc-grid.js" />
+    <Content Include="Scripts\MvcGrid\mvc-grid.min.js" />
     <Content Include="Areas\HelpPage\Views\_ViewStart.cshtml" />
     <Content Include="Content\Site.css" />
     <Content Include="Views\Web.config" />
@@ -402,6 +407,12 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\SuccessRegistration.cshtml" />
     <Content Include="Views\Home\BadRequest.cshtml" />
+    <Content Include="Views\AndroidMessages\Index.cshtml" />
+    <Content Include="Views\Shared\MvcGrid\_Pager.cshtml" />
+    <Content Include="Views\Shared\MvcGrid\_Grid.cshtml" />
+    <Content Include="Views\MessageModels\Delete.cshtml" />
+    <Content Include="Views\MessageModels\Edit.cshtml" />
+    <Content Include="Views\MessageModels\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

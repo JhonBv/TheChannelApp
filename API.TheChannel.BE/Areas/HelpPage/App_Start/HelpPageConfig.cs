@@ -39,11 +39,11 @@ namespace API.TheChannel.BE.Areas.HelpPage
             //// Uncomment the following to use "sample string" as the sample for all actions that have string as the body parameter or return type.
             //// Also, the string arrays will be used for IEnumerable<string>. The sample objects will be serialized into different media type 
             //// formats by the available formatters.
-            //config.SetSampleObjects(new Dictionary<Type, object>
-            //{
-            //    {typeof(string), "sample string"},
-            //    {typeof(IEnumerable<string>), new string[]{"sample 1", "sample 2"}}
-            //});
+            config.SetSampleObjects(new Dictionary<Type, object>
+            {
+                {typeof(string), "sample string"},
+                {typeof(IEnumerable<string>), new string[]{"sample 1", "sample 2"}}
+            });
 
             // Extend the following to provide factories for types not handled automatically (those lacking parameterless
             // constructors) or for which you prefer to use non-default property values. Line below provides a fallback
@@ -61,7 +61,7 @@ namespace API.TheChannel.BE.Areas.HelpPage
 
             //// Uncomment the following to use "[0]=foo&[1]=bar" directly as the sample for all actions that support form URL encoded format
             //// and have IEnumerable<string> as the body parameter or return type.
-            //config.SetSampleForType("[0]=foo&[1]=bar", new MediaTypeHeaderValue("application/x-www-form-urlencoded"), typeof(IEnumerable<string>));
+            config.SetSampleForType("[0]=foo&[1]=bar", new MediaTypeHeaderValue("application/x-www-form-urlencoded"), typeof(IEnumerable<string>));
 
             //// Uncomment the following to use "1234" directly as the request sample for media type "text/plain" on the controller named "Values"
             //// and action named "Put".

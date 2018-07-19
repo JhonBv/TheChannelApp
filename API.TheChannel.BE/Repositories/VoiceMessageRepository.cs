@@ -40,6 +40,20 @@ namespace API.TheChannel.BE.Repositories
             Ctx.SaveChanges();
         }
 
+        public void UpdateMessage(MessageModel model)
+        {
+            var daMess = Ctx.Message.FirstOrDefault(m => m.Id == model.Id);
+            if (daMess != null)
+            {
+                daMess.isApproved = model.isApproved;
+                daMess.FileName = model.FileName;
+                Ctx.Entry(daMess).State = System.Data.Entity.EntityState.Modified;
+            }
+
+            Ctx.SaveChanges();
+
+        }
+
         public void SaveMessage(MessageModel model)
         {
             Ctx.Message.Add(model);
@@ -70,14 +84,9 @@ namespace API.TheChannel.BE.Repositories
             return list;
         }
 
-        public IEnumerable<MessageViewModel> ViewAllMessages()
+        public IEnumerable<MessageModel> ViewAllMessages()
         {
-            List<MessageViewModel> list = new List<MessageViewModel>();
-            foreach (var i in Ctx.Message)
-            {
-                list.Add(new MessageViewModel { FileName = i.FileName, FileUrl = i.FileUrl, Location = i.Location, DateAdded = i.DateAdded, FileSizeInBytes = i.FileSizeInBytes });
-            }
-            return list;
+            return Ctx.Message.ToList();
         }
 
         public Dictionary<string, string> GetAllPhysicalFiles(string language)
@@ -93,7 +102,8 @@ namespace API.TheChannel.BE.Repositories
             }
 
             return messageFiles;
-        }       
+        }
 
+        
     }
 }
